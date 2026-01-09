@@ -1,0 +1,18 @@
+{
+  "domain": "growatt_modbus",
+  "name": "Growatt MOD/MID Modbus TCP",
+  "version": "1.0.0-v23",
+  "documentation": "https://example.invalid/growatt_modbus",
+  "requirements": [
+    "pymodbus>=2.5.0"
+  ],
+  "config_flow": true,
+  "iot_class": "local_polling",
+  "loggers": [
+    "pymodbus",
+    "custom_components.growatt_modbus"
+  ],
+  "codeowners": [
+    "@martin.nemecek"
+  ]
+}

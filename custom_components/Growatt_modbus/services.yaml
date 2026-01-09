@@ -1,0 +1,63 @@
+
+write_register:
+  name: Write Single Register (FC06)
+  description: Write a single value to a holding register (FC06).
+  fields:
+    address:
+      name: Address
+      description: Holding register address (decimal, before offset).
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 65535
+          mode: box
+          step: 1
+    value:
+      name: Value
+      description: Value to write (0–65535).
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 65535
+          mode: box
+          step: 1
+
+write_registers:
+  name: Write Multiple Registers (FC16)
+  description: Write a list of 16-bit values starting at address.
+  fields:
+    address:
+      name: Address
+      required: true
+      selector: { number: { min: 0, max: 65535, step: 1, mode: box } }
+    values:
+      name: Values
+      required: true
+      selector: { object: {} }
+
+write_u32:
+  name: Write 32-bit Unsigned (FC16)
+  description: Write a 32-bit unsigned value into two registers starting at address.
+  fields:
+    address:
+      name: Base address (high word unless word_order=low_high)
+      required: true
+      selector: { number: { min: 0, max: 65535, step: 1, mode: box } }
+    value:
+      name: Value (0..4294967295)
+      required: true
+      selector: { number: { min: 0, max: 4294967295, step: 1, mode: box } }
+    word_order:
+      name: Word order
+      selector:
+        select:
+          options:
+            - high_low
+            - low_high
+      default: high_low
+
+log_mapping:
+  name: Log Active Mapping
+  description: Logs current mapping path and the effective sensors/controls into the HA log.

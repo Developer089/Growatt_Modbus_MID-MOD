@@ -1,0 +1,394 @@
+sensors:
+- name: PV1 Voltage
+  unique_id: pv1_voltage
+  register_type: input
+  address: 3
+  count: 1
+  scale: 0.1
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+  
+- name: PV1 Current
+  unique_id: pv1_current
+  register_type: input
+  address: 4
+  count: 1
+  scale: 0.1
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: false
+  
+- name: PV1 Power
+  unique_id: pv1_power
+  register_type: input
+  address: 5
+  count: 2
+  scale: 1.0
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: false
+  
+- name: PV2 Voltage
+  unique_id: pv2_voltage
+  register_type: input
+  address: 7
+  count: 1
+  scale: 0.1
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+  
+- name: PV2 Current
+  unique_id: pv2_current
+  register_type: input
+  address: 8
+  count: 1
+  scale: 0.1
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: false
+  
+- name: PV2 Power
+  unique_id: pv2_power
+  register_type: input
+  address: 13
+  count: 2
+  scale: 1.0
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: false
+  
+- name: PV Input Power
+  unique_id: pv_input_power
+  register_type: input
+  address: 3001
+  count: 2
+  scale: 0.1
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: false
+ 
+- name: Power From Grid
+  unique_id: power_from_grid
+  register_type: input
+  address: 3041
+  count: 2
+  scale: 0.1
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: false
+  
+- name: Power To Grid
+  unique_id: power_to_grid
+  register_type: input
+  address: 3043
+  count: 2
+  scale: 0.1
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: false
+
+
+- name: Load Power
+  unique_id: load_power
+  register_type: input
+  address: 3045
+  count: 2
+  scale: 0.1
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: false
+  
+- name: Battery Charge Power
+  unique_id: battery_charge_power
+  register_type: input
+  address: 3180
+  count: 2
+  scale: 0.1
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: false
+  
+- name: Battery Discharge Power
+  unique_id: battery_discharge_power
+  register_type: input
+  address: 3178
+  count: 2
+  scale: 0.1
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: false
+  
+- name: Today User Consumption
+  unique_id: today_user_consumption
+  register_type: input
+  address: 3067
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: measurement
+  signed: false
+  
+- name: Battery Discharge Today
+  unique_id: battery_discharge_today
+  register_type: input
+  address: 3125
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+
+- name: Battery Discharge Total
+  unique_id: battery_discharge_total
+  register_type: input
+  address: 3127
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+  
+- name: Battery Charge Today
+  unique_id: battery_charge_today
+  register_type: input
+  address: 3129
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false 
+ 
+- name: Battery Charge Total
+  unique_id: battery_charge_total
+  register_type: input
+  address: 3131
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false 
+  
+- name: Generate Energy Total
+  unique_id: generate_energy_total
+  register_type: input
+  address: 3051
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+  
+- name: PV Energy Total
+  unique_id: pv_energy_total
+  register_type: input
+  address: 3053
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+  
+- name: Today User Consumption
+  unique_id: today_user_consumption
+  register_type: input
+  address: 3067
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: measurement
+  signed: false
+  
+- name: Energy Of User Load Total
+  unique_id: energy_of_user_load_total
+  register_type: input
+  address: 3069
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+  
+- name: Energy To Grid Today
+  unique_id: energy_to_grid_today
+  register_type: input
+  address: 3071
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+
+- name: Energy To Grid Total
+  unique_id: energy_to_grid_total
+  register_type: input
+  address: 3073
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+
+- name: Energy Of User Load Today
+  unique_id: energy_of_user_load_today
+  register_type: input
+  address: 3075
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+  
+- name: Energy To User Load Total
+  unique_id: energy_to_user_load_total
+  register_type: input
+  address: 3077
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+  
+- name: Energy From AC Charge Today
+  unique_id: energy_from_from_ac_charge_today
+  register_type: input
+  address: 3133
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: measurement
+  signed: false
+  
+- name: Energy From AC Charge Total
+  unique_id: energy_from_from_ac_charge_total
+  register_type: input
+  address: 3135
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+ 
+- name: Energy Of System Output
+  unique_id: energy_of_system_output
+  register_type: input
+  address: 3137
+  count: 2
+  scale: 0.1
+  unit_of_measurement: kWh
+  device_class: energy
+  state_class: total_increasing
+  signed: false
+
+- name: Battery SOC
+  unique_id: battery_soc
+  register_type: input
+  address: 3171
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+
+- name: Work Mode
+  unique_id: work_mode_sensor
+  register_type: input    # nebo holding – podle reálné adresy v manuálu
+  address: 118            # potvrď, že 118 je správně pro Work Mode
+  count: 1
+  scale: 1
+
+
+  
+controls:
+- type: switch
+  name: "Grid Charge"
+  unique_id: grid_charge
+  register_type: holding
+  address: 3049
+  on_value: 1
+  off_value: 0
+  optimistic: true
+  
+- type: number
+  name: "Export Power Rate"
+  unique_id: export_power_rate
+  register_type: holding
+  address: 123        
+  min: 0
+  max: 1000
+  step: 1
+  unit_of_measurement: "W"
+  mode: slider
+  optimistic: true
+  write_factor: 1
+  
+- type: number
+  name: "Battery Charge Power"
+  unique_id: battery_charge_power
+  register_type: holding
+  address: 3047        
+  min: 0
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  mode: slider
+  optimistic: true
+  write_factor: 1
+  
+- type: number
+  name: "Battery Discharge Power"
+  unique_id: battery_discharge_power
+  register_type: holding
+  address: 3036        
+  min: 0
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  mode: slider
+  optimistic: true
+  write_factor: 1
+
+- type: select32
+  name: "Period Mode"
+  unique_id: WorkMode
+  base_address: 3038       # adresa začátku 32-bitového registru (high word)
+  word_order: low_high     # pořadí slov: high_low nebo low_high
+  options:
+    - label: "Load priority"
+      value: 389775360
+    - label: "Battery priority"
+      value: 389783552
+    - label: "Grid priority"
+      value: 389791744
+
+
+  
