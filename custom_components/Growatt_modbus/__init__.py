@@ -9,7 +9,7 @@ from .const import (
     DEFAULT_PORT, DEFAULT_UNIT_ID, CONF_MAPPING_PATH,
     CONF_TRANSPORT, DEFAULT_TRANSPORT, CONF_BAUDRATE, DEFAULT_BAUDRATE, CONF_BYTESIZE, DEFAULT_BYTESIZE,
     CONF_PARITY, DEFAULT_PARITY, CONF_STOPBITS, DEFAULT_STOPBITS,
-    CONF_ADDR_OFFSET, DEFAULT_ADDR_OFFSET,
+    CONF_ADDR_OFFSET, DEFAULT_ADDR_OFFSET, MIN_SCAN_SECONDS, MAX_SCAN_SECONDS,
 )
 from .coordinator import GrowattModbusCoordinator, RegisterDef
 from .mapping import load_register_mapping
@@ -69,6 +69,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     port = entry.data.get(CONF_PORT, DEFAULT_PORT)
     unit_id = entry.data.get(CONF_UNIT_ID, DEFAULT_UNIT_ID)
     scan_interval = entry.options.get(CONF_SCAN_INTERVAL, entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_SECONDS))
+    scan_interval = max(MIN_SCAN_SECONDS, min(MAX_SCAN_SECONDS, int(scan_interval)))
     transport = entry.options.get(CONF_TRANSPORT, entry.data.get(CONF_TRANSPORT, DEFAULT_TRANSPORT))
     mapping_path = entry.options.get(CONF_MAPPING_PATH, entry.data.get(CONF_MAPPING_PATH, ""))
     addr_offset = entry.options.get(CONF_ADDR_OFFSET, DEFAULT_ADDR_OFFSET)
