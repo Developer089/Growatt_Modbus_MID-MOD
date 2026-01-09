@@ -17,6 +17,10 @@ DATA_SCHEMA = vol.Schema({
     vol.Required(CONF_HOST): str,
     vol.Optional(CONF_PORT, default=DEFAULT_PORT): int,
     vol.Optional(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): int,
+    vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_SECONDS): vol.All(
+        vol.Coerce(int), vol.Range(min=MIN_SCAN_SECONDS, max=MAX_SCAN_SECONDS)
+    ),
+    vol.Optional(CONF_MAPPING_PATH, default="EMBEDDED"): str,
 })
 
 OPTIONS_SCHEMA = vol.Schema({
