@@ -21,7 +21,13 @@
         "title": "Možnosti",
         "data": {
           "scan_interval": "Interval čtení (s)",
-          "mapping_path": "Cesta k YAML mapě"
+          "mapping_path": "Cesta k YAML mapě",
+          "transport": "Transport",
+          "address_offset": "Adresní offset",
+          "baudrate": "Baudrate",
+          "bytesize": "Bits na bajt",
+          "parity": "Parita",
+          "stopbits": "Stop bity"
         }
       }
     }
