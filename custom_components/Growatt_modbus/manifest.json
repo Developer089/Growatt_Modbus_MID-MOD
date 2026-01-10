@@ -1,7 +1,7 @@
 {
   "domain": "growatt_modbus",
   "name": "Growatt MOD/MID Modbus TCP",
-  "version": "1.0.0-v23",
+  "version": "0.2.0a",
   "documentation": "https://example.invalid/growatt_modbus",
   "requirements": [
     "pymodbus>=2.5.0"
