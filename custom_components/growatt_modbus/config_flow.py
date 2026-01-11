@@ -61,18 +61,10 @@ class GrowattModbusOptionsFlow(config_entries.OptionsFlow):
         parity = str(self._entry_default(CONF_PARITY, DEFAULT_PARITY)).upper()
         if parity not in {"N", "E", "O"}:
             parity = DEFAULT_PARITY
-        mapping_path = self._entry_default(CONF_MAPPING_PATH, "EMBEDDED")
-        if mapping_path is None:
-            mapping_path = "EMBEDDED"
-        else:
-            mapping_path = str(mapping_path).strip()
-            if not mapping_path:
-                mapping_path = "EMBEDDED"
         return vol.Schema({
             vol.Optional(CONF_SCAN_INTERVAL, default=self._entry_int_default(CONF_SCAN_INTERVAL, DEFAULT_SCAN_SECONDS)): vol.All(
                 vol.Coerce(int), vol.Range(min=MIN_SCAN_SECONDS, max=MAX_SCAN_SECONDS)
             ),
-            vol.Optional(CONF_MAPPING_PATH, default=mapping_path): str,
             vol.Optional(CONF_TRANSPORT, default=transport): vol.In(["tcp", "rtutcp"]),
             vol.Optional(CONF_ADDR_OFFSET, default=self._entry_int_default(CONF_ADDR_OFFSET, DEFAULT_ADDR_OFFSET)): vol.Coerce(int),
             vol.Optional(CONF_BAUDRATE, default=self._entry_int_default(CONF_BAUDRATE, DEFAULT_BAUDRATE)): vol.Coerce(int),
@@ -88,9 +80,7 @@ class GrowattModbusOptionsFlow(config_entries.OptionsFlow):
             except vol.Invalid:
                 errors["base"] = "invalid_input"
             else:
-                mapping_path = user_input.get(CONF_MAPPING_PATH)
-                if mapping_path is None or not str(mapping_path).strip():
-                    user_input[CONF_MAPPING_PATH] = "EMBEDDED"
+                user_input.pop(CONF_MAPPING_PATH, None)
                 return self.async_create_entry(title="", data=user_input)
         return self.async_show_form(
             step_id="init",
