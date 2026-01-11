@@ -60,7 +60,12 @@ class GrowattModbusOptionsFlow(config_entries.OptionsFlow):
         if parity not in {"N", "E", "O"}:
             parity = DEFAULT_PARITY
         mapping_path = self._entry_default(CONF_MAPPING_PATH, "EMBEDDED")
-        mapping_path = mapping_path if str(mapping_path).strip() else "EMBEDDED"
+        if mapping_path is None:
+            mapping_path = "EMBEDDED"
+        else:
+            mapping_path = str(mapping_path).strip()
+            if not mapping_path:
+                mapping_path = "EMBEDDED"
         return vol.Schema({
             vol.Optional(CONF_SCAN_INTERVAL, default=self._entry_int_default(CONF_SCAN_INTERVAL, DEFAULT_SCAN_SECONDS)): vol.All(
                 vol.Coerce(int), vol.Range(min=MIN_SCAN_SECONDS, max=MAX_SCAN_SECONDS)
