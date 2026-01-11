@@ -37,6 +37,9 @@ class GrowattModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return GrowattModbusOptionsFlow(config_entry)
 
 class GrowattModbusOptionsFlow(config_entries.OptionsFlow):
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+        super().__init__(config_entry)
+
     def _entry_default(self, key: str, fallback: Any) -> Any:
         options = self.config_entry.options or {}
         data = self.config_entry.data or {}
