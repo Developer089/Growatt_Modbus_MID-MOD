@@ -41,7 +41,9 @@ class GrowattModbusOptionsFlow(config_entries.OptionsFlow):
         self.config_entry = entry
 
     def _entry_default(self, key: str, fallback: Any) -> Any:
-        return self.config_entry.options.get(key, self.config_entry.data.get(key, fallback))
+        options = self.config_entry.options or {}
+        data = self.config_entry.data or {}
+        return options.get(key, data.get(key, fallback))
 
     def _entry_int_default(self, key: str, fallback: int) -> int:
         value = self._entry_default(key, fallback)
@@ -80,5 +82,8 @@ class GrowattModbusOptionsFlow(config_entries.OptionsFlow):
         })
     async def async_step_init(self, user_input=None):
         if user_input is not None:
+            mapping_path = user_input.get(CONF_MAPPING_PATH)
+            if mapping_path is None or not str(mapping_path).strip():
+                user_input[CONF_MAPPING_PATH] = "EMBEDDED"
             return self.async_create_entry(title="", data=user_input)
         return self.async_show_form(step_id="init", data_schema=self._options_schema())
