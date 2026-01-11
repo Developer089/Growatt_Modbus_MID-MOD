@@ -71,7 +71,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     scan_interval = entry.options.get(CONF_SCAN_INTERVAL, entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_SECONDS))
     scan_interval = max(MIN_SCAN_SECONDS, min(MAX_SCAN_SECONDS, int(scan_interval)))
     transport = entry.options.get(CONF_TRANSPORT, entry.data.get(CONF_TRANSPORT, DEFAULT_TRANSPORT))
-    mapping_path = entry.options.get(CONF_MAPPING_PATH, entry.data.get(CONF_MAPPING_PATH, ""))
+    mapping_path = entry.options.get(CONF_MAPPING_PATH, entry.data.get(CONF_MAPPING_PATH, "EMBEDDED"))
     addr_offset = entry.options.get(CONF_ADDR_OFFSET, DEFAULT_ADDR_OFFSET)
     serial_params = {
         "baudrate": entry.options.get(CONF_BAUDRATE, DEFAULT_BAUDRATE),
