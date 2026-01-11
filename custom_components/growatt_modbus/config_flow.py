@@ -81,9 +81,19 @@ class GrowattModbusOptionsFlow(config_entries.OptionsFlow):
             vol.Optional(CONF_STOPBITS, default=self._entry_int_default(CONF_STOPBITS, DEFAULT_STOPBITS)): vol.Coerce(int),
         })
     async def async_step_init(self, user_input=None):
+        errors = {}
         if user_input is not None:
-            mapping_path = user_input.get(CONF_MAPPING_PATH)
-            if mapping_path is None or not str(mapping_path).strip():
-                user_input[CONF_MAPPING_PATH] = "EMBEDDED"
-            return self.async_create_entry(title="", data=user_input)
-        return self.async_show_form(step_id="init", data_schema=self._options_schema())
+            try:
+                user_input = self._options_schema()(user_input)
+            except vol.Invalid:
+                errors["base"] = "invalid_input"
+            else:
+                mapping_path = user_input.get(CONF_MAPPING_PATH)
+                if mapping_path is None or not str(mapping_path).strip():
+                    user_input[CONF_MAPPING_PATH] = "EMBEDDED"
+                return self.async_create_entry(title="", data=user_input)
+        return self.async_show_form(
+            step_id="init",
+            data_schema=self._options_schema(),
+            errors=errors,
+        )
