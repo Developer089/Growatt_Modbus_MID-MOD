@@ -41,6 +41,8 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._serial_params = serial_params or {}; self._client = None; self._lock = asyncio.Lock()
         self._write_lock = asyncio.Lock()
         self._addr_off = int(address_offset or 0)
+        self._reconnect_attempts = 0
+        self._max_reconnect_attempts = 5
 
         self._hold_once_done = False
         self._hold_cache: Dict[str, Any] = {}
@@ -61,8 +63,14 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 try: self._client = AsyncModbusTcpClient(self._host, port=self._port, timeout=5)
                 except TypeError: self._client = AsyncModbusTcpClient(self._host, port=self._port)
         if not bool(getattr(self._client, "connected", False)):
-            try: res = await self._client.connect()
-            except Exception as e: raise UpdateFailed(f"Modbus connect failed: {e}") from e
+            try:
+                await self._client.connect()
+                self._reconnect_attempts = 0
+            except Exception as e:
+                self._reconnect_attempts += 1
+                if self._reconnect_attempts >= self._max_reconnect_attempts:
+                    _LOGGER.error("Modbus connection failed after %s attempts: %s", self._reconnect_attempts, e)
+                raise UpdateFailed(f"Modbus connect failed (attempt {self._reconnect_attempts}): {e}") from e
         return self._client
 
     async def _async_update_data(self) -> dict[str, Any]:
@@ -91,6 +99,12 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
                 return result
             except Exception as err:
+                if self._client and not bool(getattr(self._client, "connected", False)):
+                    try:
+                        await self._client.close()
+                    except Exception:
+                        pass
+                    self._client = None
                 raise UpdateFailed(err) from err
 
     async def _read_grouped(self, regs: list[RegisterDef], out: dict[str, Any], fn):
