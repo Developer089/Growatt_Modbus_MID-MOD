@@ -34,8 +34,8 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     Next cycles: only INPUTs are polled; holdings come from cache.
     Writes update cache immediately (16b & 32b) and trigger UI refresh.
     """
-    def __init__(self, hass: HomeAssistant, host: str, port: int, unit_id: int, registers, scan_interval: int, transport="tcp", serial_params=None, address_offset: int = 0) -> None:
-        super().__init__(hass, _LOGGER, name="growatt_modbus coordinator", update_interval=timedelta(seconds=scan_interval))
+    def __init__(self, hass: HomeAssistant, host: str, port: int, unit_id: int, registers, scan_interval_ms: int, transport="tcp", serial_params=None, address_offset: int = 0) -> None:
+        super().__init__(hass, _LOGGER, name="growatt_modbus coordinator", update_interval=timedelta(milliseconds=scan_interval_ms))
         self._host, self._port, self._unit_id = host, port, unit_id
         self._registers: List[RegisterDef] = registers; self._transport = (transport or "tcp").lower()
         self._serial_params = serial_params or {}; self._client = None; self._lock = asyncio.Lock()
