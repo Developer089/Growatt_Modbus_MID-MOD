@@ -37,6 +37,12 @@ class GrowattModbusNumber(CoordinatorEntity[dict[str, Any]], NumberEntity):
         self._attr_native_unit_of_measurement = cfg.get("unit_of_measurement")
         self._write_factor = float(cfg.get("write_factor", 1.0))
         self._read_uid: Optional[str] = cfg.get("read_unique_id"); self._read_factor = float(cfg.get("read_factor", 1.0))
+        if cfg.get("entity_category"):
+            from homeassistant.helpers.entity import EntityCategory
+            try:
+                self._attr_entity_category = EntityCategory(cfg["entity_category"])
+            except Exception:
+                pass
         self._value: float = self._attr_native_min_value; self._sync_from_sensor()
     @property
     def native_value(self) -> float: return self._value
@@ -70,6 +76,12 @@ class GrowattModbusNumber32(CoordinatorEntity[dict[str, Any]], NumberEntity):
         self._attr_native_min_value = float(cfg.get("min", 0)); self._attr_native_max_value = float(cfg.get("max", 4294967295))
         self._attr_native_step = float(cfg.get("step", 1)); self._attr_mode = NumberMode.BOX if cfg.get("mode", "box") == "box" else NumberMode.SLIDER
         self._value: float = 0.0
+        if cfg.get("entity_category"):
+            from homeassistant.helpers.entity import EntityCategory
+            try:
+                self._attr_entity_category = EntityCategory(cfg["entity_category"])
+            except Exception:
+                pass
     @property
     def native_value(self) -> float: return self._value
     async def async_set_native_value(self, value: float) -> None:

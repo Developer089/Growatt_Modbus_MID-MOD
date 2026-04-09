@@ -43,6 +43,12 @@ class GrowattRegisterSensor(CoordinatorEntity[dict[str, Any]], SensorEntity):
                 self._attr_state_class = SensorStateClass(reg.state_class)
             except Exception:
                 self._attr_state_class = None
+        if reg.entity_category:
+            from homeassistant.helpers.entity import EntityCategory
+            try:
+                self._attr_entity_category = EntityCategory(reg.entity_category)
+            except Exception:
+                pass
 
     @property
     def native_value(self) -> Any:

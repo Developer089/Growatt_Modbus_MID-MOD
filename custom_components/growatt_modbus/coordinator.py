@@ -27,6 +27,7 @@ class RegisterDef:
     state_class: str | None = None
     signed: bool = False
     options: dict[int, str] | None = None  # enum mapping for sensor (0->"text")
+    entity_category: str | None = None
 
 class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """

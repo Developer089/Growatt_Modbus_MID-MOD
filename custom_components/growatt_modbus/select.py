@@ -37,6 +37,12 @@ class GrowattModbusSelect(CoordinatorEntity[dict[str, Any]], SelectEntity):
         self._attr_device_info = build_device_info(entry)
         self._attr_options = self._labels; self._current_option: Optional[str] = None
         self._read_uid: Optional[str] = cfg.get("read_unique_id"); self._read_factor: float = float(cfg.get("read_factor", 1.0))
+        if cfg.get("entity_category"):
+            from homeassistant.helpers.entity import EntityCategory
+            try:
+                self._attr_entity_category = EntityCategory(cfg["entity_category"])
+            except Exception:
+                pass
         self._sync_from_sensor()
     @property
     def current_option(self) -> str | None: return self._current_option
@@ -75,6 +81,12 @@ class GrowattModbusSelect32(CoordinatorEntity[dict[str, Any]], SelectEntity):
         self._attr_options = self._labels
         self._current_option: Optional[str] = None
         self._read_uid: Optional[str] = cfg.get("read_unique_id")
+        if cfg.get("entity_category"):
+            from homeassistant.helpers.entity import EntityCategory
+            try:
+                self._attr_entity_category = EntityCategory(cfg["entity_category"])
+            except Exception:
+                pass
         self._sync_from_sensor()
     @property
     def current_option(self) -> str | None:

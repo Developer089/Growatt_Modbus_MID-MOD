@@ -314,9 +314,10 @@ sensors:
   address: 118            # potvrď, že 118 je správně pro Work Mode
   count: 1
   scale: 1
+  entity_category: diagnostic
 
 
-  
+
 controls:
 - type: switch
   name: "Grid Charge"
@@ -326,12 +327,13 @@ controls:
   on_value: 1
   off_value: 0
   optimistic: true
-  
+  entity_category: config
+
 - type: number
   name: "Export Power Rate"
   unique_id: export_power_rate
   register_type: holding
-  address: 123        
+  address: 123
   min: 0
   max: 1000
   step: 1
@@ -339,12 +341,13 @@ controls:
   mode: slider
   optimistic: true
   write_factor: 1
-  
+  entity_category: config
+
 - type: number
   name: "Battery Charge Power"
   unique_id: battery_charge_power
   register_type: holding
-  address: 3047        
+  address: 3047
   min: 0
   max: 100
   step: 1
@@ -352,12 +355,13 @@ controls:
   mode: slider
   optimistic: true
   write_factor: 1
-  
+  entity_category: config
+
 - type: number
   name: "Battery Discharge Power"
   unique_id: battery_discharge_power
   register_type: holding
-  address: 3036        
+  address: 3036
   min: 0
   max: 100
   step: 1
@@ -365,12 +369,14 @@ controls:
   mode: slider
   optimistic: true
   write_factor: 1
+  entity_category: config
 
 - type: select32
   name: "Period Mode"
   unique_id: WorkMode
   base_address: 3038       # adresa začátku 32-bitového registru (high word)
   word_order: low_high     # pořadí slov: high_low nebo low_high
+  entity_category: config
   options:
     - label: "Load priority"
       value: 389775360
