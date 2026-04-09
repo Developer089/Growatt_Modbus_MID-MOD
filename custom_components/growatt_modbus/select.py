@@ -45,6 +45,10 @@ class GrowattModbusSelect(CoordinatorEntity[dict[str, Any]], SelectEntity):
                 pass
         self._sync_from_sensor()
     @property
+    def available(self) -> bool:
+        return self._coordinator.available
+
+    @property
     def current_option(self) -> str | None: return self._current_option
     async def async_select_option(self, option: str) -> None:
         if option not in self._value_by_label: return
@@ -88,6 +92,10 @@ class GrowattModbusSelect32(CoordinatorEntity[dict[str, Any]], SelectEntity):
             except Exception:
                 pass
         self._sync_from_sensor()
+    @property
+    def available(self) -> bool:
+        return self._coordinator.available
+
     @property
     def current_option(self) -> str | None:
         return self._current_option

@@ -39,6 +39,10 @@ class GrowattModbusSwitch(CoordinatorEntity[dict[str, Any]], SwitchEntity):
                 pass
         self._sync_from_sensor()
     @property
+    def available(self) -> bool:
+        return self._coordinator.available
+
+    @property
     def is_on(self) -> bool | None: return self._state
     async def async_turn_on(self, **kwargs):
         ok = await self._write(self._on); 

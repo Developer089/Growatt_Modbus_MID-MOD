@@ -45,12 +45,17 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._reconnect_attempts = 0
         self._max_reconnect_attempts = 5
 
+        self._available = False
         self._hold_once_done = False
         self._hold_cache: Dict[str, Any] = {}
         self._hold_regs_by_addr: DefaultDict[int, List[RegisterDef]] = defaultdict(list)
         for r in self._registers:
             if r.register_type == "holding":
                 self._hold_regs_by_addr[int(r.address)].append(r)
+
+    @property
+    def available(self) -> bool:
+        return self._available
 
     def _addr(self, addr: int) -> int: return int(addr) - self._addr_off if self._addr_off else int(addr)
 
@@ -98,8 +103,10 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     for r in holdings:
                         result[r.unique_id] = self._hold_cache.get(r.unique_id)
 
+                self._available = True
                 return result
             except Exception as err:
+                self._available = False
                 if self._client and not bool(getattr(self._client, "connected", False)):
                     try:
                         await self._client.close()

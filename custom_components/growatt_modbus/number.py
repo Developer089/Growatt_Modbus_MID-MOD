@@ -45,6 +45,10 @@ class GrowattModbusNumber(CoordinatorEntity[dict[str, Any]], NumberEntity):
                 pass
         self._value: float = self._attr_native_min_value; self._sync_from_sensor()
     @property
+    def available(self) -> bool:
+        return self._coordinator.available
+
+    @property
     def native_value(self) -> float: return self._value
     async def async_set_native_value(self, value: float) -> None:
         step = self._attr_native_step or 1.0; minv = self._attr_native_min_value; maxv = self._attr_native_max_value
@@ -82,6 +86,10 @@ class GrowattModbusNumber32(CoordinatorEntity[dict[str, Any]], NumberEntity):
                 self._attr_entity_category = EntityCategory(cfg["entity_category"])
             except Exception:
                 pass
+    @property
+    def available(self) -> bool:
+        return self._coordinator.available
+
     @property
     def native_value(self) -> float: return self._value
     async def async_set_native_value(self, value: float) -> None:

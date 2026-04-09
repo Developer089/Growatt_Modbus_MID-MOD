@@ -51,6 +51,10 @@ class GrowattRegisterSensor(CoordinatorEntity[dict[str, Any]], SensorEntity):
                 pass
 
     @property
+    def available(self) -> bool:
+        return self.coordinator.available
+
+    @property
     def native_value(self) -> Any:
         raw = (self.coordinator.data or {}).get(self._reg.unique_id)
         if self._options is not None and raw is not None:
