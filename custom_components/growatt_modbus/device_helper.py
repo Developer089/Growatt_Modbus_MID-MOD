@@ -3,13 +3,16 @@ from homeassistant.const import CONF_HOST
 from homeassistant.helpers.entity import DeviceInfo
 from .const import DOMAIN, CONF_DEVICE_NAME, DEFAULT_DEVICE_NAME
 
-def build_device_info(entry):
+def build_device_info(entry, sw_version: str | None = None):
     host = entry.data.get(CONF_HOST)
     device_name = entry.data.get(CONF_DEVICE_NAME, DEFAULT_DEVICE_NAME)
-    return DeviceInfo(
+    info = DeviceInfo(
         identifiers={(DOMAIN, entry.entry_id)},
         name=device_name,
         manufacturer="Growatt",
         model="MOD/MID",
-        configuration_url=(f"http://{host}" if host else None)
+        configuration_url=(f"http://{host}" if host else None),
     )
+    if sw_version:
+        info["sw_version"] = sw_version
+    return info

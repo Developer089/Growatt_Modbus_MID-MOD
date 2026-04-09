@@ -316,7 +316,21 @@ sensors:
   scale: 1
   entity_category: diagnostic
 
+- name: Firmware Version
+  unique_id: firmware_version
+  register_type: holding
+  address: 9
+  count: 1
+  scale: 1
+  entity_category: diagnostic
 
+- name: Serial Number High
+  unique_id: serial_number_high
+  register_type: holding
+  address: 0
+  count: 5
+  scale: 1
+  entity_category: diagnostic
 
 controls:
 - type: switch
