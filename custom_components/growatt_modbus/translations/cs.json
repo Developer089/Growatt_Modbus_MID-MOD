@@ -3,14 +3,14 @@
   "config": {
     "step": {
       "user": {
-        "title": "Připojit Growatt MOD/MID Modbus TCP",
-        "description": "Zadejte údaje pro připojení přes Modbus TCP. Mapu registrů můžete uložit do souboru /config/growatt_modbus_map.yaml.",
+        "title": "Pripojit Growatt MOD/MID Modbus TCP",
+        "description": "Zadejte udaje pro pripojeni pres Modbus TCP. Mapu registru muzete ulozit do souboru /config/growatt_modbus_map.yaml.",
         "data": {
           "host": "Host",
           "port": "Port",
-          "scan_interval": "Interval čtení (s)",
+          "scan_interval_ms": "Interval cteni (ms)",
           "unit_id": "Unit ID",
-          "mapping_path": "Cesta k YAML mapě (volitelně)"
+          "mapping_path": "Cesta k YAML mape (volitelne)"
         }
       }
     }
@@ -18,13 +18,13 @@
   "options": {
     "step": {
       "init": {
-        "title": "Možnosti",
+        "title": "Moznosti",
         "data": {
-          "scan_interval": "Interval čtení (s)",
+          "scan_interval_ms": "Interval cteni (ms)",
           "transport": "Transport",
-          "address_offset": "Adresní offset",
+          "address_offset": "Adresni offset",
           "baudrate": "Baudrate",
-          "bytesize": "Bits na bajt",
+          "bytesize": "Bity na bajt",
           "parity": "Parita",
           "stopbits": "Stop bity"
         }

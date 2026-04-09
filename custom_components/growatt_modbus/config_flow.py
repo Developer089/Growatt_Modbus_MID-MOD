@@ -11,14 +11,15 @@ from .const import (
     CONF_BAUDRATE, DEFAULT_BAUDRATE, CONF_BYTESIZE, DEFAULT_BYTESIZE,
     CONF_PARITY, DEFAULT_PARITY, CONF_STOPBITS, DEFAULT_STOPBITS,
     CONF_ADDR_OFFSET, DEFAULT_ADDR_OFFSET, MIN_SCAN_SECONDS, MAX_SCAN_SECONDS,
+    CONF_SCAN_INTERVAL_MS, DEFAULT_SCAN_MS, MIN_SCAN_MS, MAX_SCAN_MS,
 )
 
 DATA_SCHEMA = vol.Schema({
     vol.Required(CONF_HOST): str,
     vol.Optional(CONF_PORT, default=DEFAULT_PORT): int,
     vol.Optional(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): int,
-    vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_SECONDS): vol.All(
-        vol.Coerce(int), vol.Range(min=MIN_SCAN_SECONDS, max=MAX_SCAN_SECONDS)
+    vol.Optional(CONF_SCAN_INTERVAL_MS, default=DEFAULT_SCAN_MS): vol.All(
+        vol.Coerce(int), vol.Range(min=MIN_SCAN_MS, max=MAX_SCAN_MS)
     ),
     vol.Optional(CONF_MAPPING_PATH, default="EMBEDDED"): str,
 })
@@ -62,8 +63,8 @@ class GrowattModbusOptionsFlow(config_entries.OptionsFlow):
         if parity not in {"N", "E", "O"}:
             parity = DEFAULT_PARITY
         return vol.Schema({
-            vol.Optional(CONF_SCAN_INTERVAL, default=self._entry_int_default(CONF_SCAN_INTERVAL, DEFAULT_SCAN_SECONDS)): vol.All(
-                vol.Coerce(int), vol.Range(min=MIN_SCAN_SECONDS, max=MAX_SCAN_SECONDS)
+            vol.Optional(CONF_SCAN_INTERVAL_MS, default=self._entry_int_default(CONF_SCAN_INTERVAL_MS, DEFAULT_SCAN_MS)): vol.All(
+                vol.Coerce(int), vol.Range(min=MIN_SCAN_MS, max=MAX_SCAN_MS)
             ),
             vol.Optional(CONF_TRANSPORT, default=transport): vol.In(["tcp", "rtutcp"]),
             vol.Optional(CONF_ADDR_OFFSET, default=self._entry_int_default(CONF_ADDR_OFFSET, DEFAULT_ADDR_OFFSET)): vol.Coerce(int),
