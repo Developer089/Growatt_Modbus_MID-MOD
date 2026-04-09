@@ -39,6 +39,7 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._host, self._port, self._unit_id = host, port, unit_id
         self._registers: List[RegisterDef] = registers; self._transport = (transport or "tcp").lower()
         self._serial_params = serial_params or {}; self._client = None; self._lock = asyncio.Lock()
+        self._write_lock = asyncio.Lock()
         self._addr_off = int(address_offset or 0)
 
         self._hold_once_done = False
@@ -139,51 +140,53 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return None if rr is None or (getattr(rr,"isError",None) and rr.isError()) else getattr(rr,"registers",None)
 
     async def write_single_register(self, address: int, value: int) -> bool:
-        a=self._addr(address); client=await self._ensure_client()
-        for variant in (lambda: client.write_register(a,value,self._unit_id), lambda: client.write_register(address=a,value=value,unit=self._unit_id), lambda: client.write_register(a,value), lambda: client.write_register(address=a,value=value)):
-            try:
-                rr = await variant()
-                if getattr(rr,"isError",lambda: False)(): continue
-                # update cache for 16-bit sensors at this address
-                for r in self._hold_regs_by_addr.get(int(address), []):
-                    if r.count == 1:
-                        self._hold_cache[r.unique_id] = (value * r.scale)
-                await self.async_request_refresh()
-                return True
-            except TypeError: continue
-            except Exception: return False
-        return False
+        async with self._write_lock:
+            a=self._addr(address); client=await self._ensure_client()
+            for variant in (lambda: client.write_register(a,value,self._unit_id), lambda: client.write_register(address=a,value=value,unit=self._unit_id), lambda: client.write_register(a,value), lambda: client.write_register(address=a,value=value)):
+                try:
+                    rr = await variant()
+                    if getattr(rr,"isError",lambda: False)(): continue
+                    # update cache for 16-bit sensors at this address
+                    for r in self._hold_regs_by_addr.get(int(address), []):
+                        if r.count == 1:
+                            self._hold_cache[r.unique_id] = (value * r.scale)
+                    await self.async_request_refresh()
+                    return True
+                except TypeError: continue
+                except Exception: return False
+            return False
 
     async def write_multiple_registers(self, address: int, values: list[int]) -> bool:
-        a=self._addr(address); client=await self._ensure_client()
-        for variant in (lambda: client.write_registers(a,values,self._unit_id),
-                        lambda: client.write_registers(address=a, values=values, unit=self._unit_id),
-                        lambda: client.write_registers(a,values),
-                        lambda: client.write_registers(address=a, values=values)):
-            try:
-                rr = await variant()
-                if getattr(rr,"isError",lambda: False)(): continue
+        async with self._write_lock:
+            a=self._addr(address); client=await self._ensure_client()
+            for variant in (lambda: client.write_registers(a,values,self._unit_id),
+                            lambda: client.write_registers(address=a, values=values, unit=self._unit_id),
+                            lambda: client.write_registers(a,values),
+                            lambda: client.write_registers(address=a, values=values)):
+                try:
+                    rr = await variant()
+                    if getattr(rr,"isError",lambda: False)(): continue
 
-                # 16b cache updates
-                for i, val in enumerate(values):
-                    addr_i = address + i
-                    for r in self._hold_regs_by_addr.get(addr_i, []):
-                        if r.count == 1:
-                            self._hold_cache[r.unique_id] = (val * r.scale)
+                    # 16b cache updates
+                    for i, val in enumerate(values):
+                        addr_i = address + i
+                        for r in self._hold_regs_by_addr.get(addr_i, []):
+                            if r.count == 1:
+                                self._hold_cache[r.unique_id] = (val * r.scale)
 
-                # 32b cache update at base address if two or more values provided
-                if len(values) >= 2:
-                    hi, lo = values[0] & 0xFFFF, values[1] & 0xFFFF
-                    u32 = ((hi << 16) | lo)
-                    for r in self._hold_regs_by_addr.get(int(address), []):
-                        if r.count == 2:
-                            self._hold_cache[r.unique_id] = (u32 * r.scale)
+                    # 32b cache update at base address if two or more values provided
+                    if len(values) >= 2:
+                        hi, lo = values[0] & 0xFFFF, values[1] & 0xFFFF
+                        u32 = ((hi << 16) | lo)
+                        for r in self._hold_regs_by_addr.get(int(address), []):
+                            if r.count == 2:
+                                self._hold_cache[r.unique_id] = (u32 * r.scale)
 
-                await self.async_request_refresh()
-                return True
-            except TypeError: continue
-            except Exception: return False
-        return False
+                    await self.async_request_refresh()
+                    return True
+                except TypeError: continue
+                except Exception: return False
+            return False
 
     async def write_u32(self, base_address: int, value: int, word_order: str = "high_low") -> bool:
         v = int(value) & 0xFFFFFFFF
@@ -197,19 +200,20 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return ok
 
     async def write_coil(self, address: int, value: int) -> bool:
-        a = self._addr(address); client = await self._ensure_client()
-        for variant in (lambda: client.write_coil(a, bool(value), self._unit_id),
-                        lambda: client.write_coil(address=a, value=bool(value), unit=self._unit_id),
-                        lambda: client.write_coil(a, bool(value)),
-                        lambda: client.write_coil(address=a, value=bool(value))):
-            try:
-                rr = await variant()
-                if getattr(rr,"isError",lambda: False)(): continue
-                await self.async_request_refresh()
-                return True
-            except TypeError: continue
-            except Exception: return False
-        return False
+        async with self._write_lock:
+            a = self._addr(address); client = await self._ensure_client()
+            for variant in (lambda: client.write_coil(a, bool(value), self._unit_id),
+                            lambda: client.write_coil(address=a, value=bool(value), unit=self._unit_id),
+                            lambda: client.write_coil(a, bool(value)),
+                            lambda: client.write_coil(address=a, value=bool(value))):
+                try:
+                    rr = await variant()
+                    if getattr(rr,"isError",lambda: False)(): continue
+                    await self.async_request_refresh()
+                    return True
+                except TypeError: continue
+                except Exception: return False
+            return False
 
     async def async_close(self):
         try:
