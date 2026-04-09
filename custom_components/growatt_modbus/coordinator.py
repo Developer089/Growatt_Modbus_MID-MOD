@@ -125,7 +125,7 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         if start is not None: await self._read_window(fn, out, start, end, acc)
 
     async def _read_window(self, fn, out, start, end, regs):
-        raw = await fn(self._addr(start), end-start)
+        raw = await fn(start, end-start)
         for r in regs:
             val=None
             if raw:
@@ -214,12 +214,7 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         v = int(value) & 0xFFFFFFFF
         hi = (v >> 16) & 0xFFFF; lo = v & 0xFFFF
         values = [hi, lo] if word_order == "high_low" else [lo, hi]
-        ok = await self.write_multiple_registers(base_address, values)
-        if ok:
-            for r in self._hold_regs_by_addr.get(int(base_address), []):
-                if r.count == 2:
-                    self._hold_cache[r.unique_id] = (v * r.scale)
-        return ok
+        return await self.write_multiple_registers(base_address, values)
 
     async def write_coil(self, address: int, value: int) -> bool:
         async with self._write_lock:

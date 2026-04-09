@@ -34,6 +34,7 @@ class GrowattModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             host = user_input[CONF_HOST]
             port = user_input.get(CONF_PORT, DEFAULT_PORT)
             unit_id = user_input.get(CONF_UNIT_ID, DEFAULT_UNIT_ID)
+            client = None
             try:
                 from pymodbus.client import AsyncModbusTcpClient
                 client = AsyncModbusTcpClient(host, port=port, timeout=5)
@@ -44,9 +45,14 @@ class GrowattModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     rr = await client.read_input_registers(0, 1, unit_id)
                     if rr is None or (hasattr(rr, "isError") and rr.isError()):
                         errors["base"] = "no_response"
-                    await client.close()
             except Exception:
                 errors["base"] = "cannot_connect"
+            finally:
+                if client:
+                    try:
+                        await client.close()
+                    except Exception:
+                        pass
 
             if not errors:
                 device_name = user_input.get(CONF_DEVICE_NAME, DEFAULT_DEVICE_NAME)

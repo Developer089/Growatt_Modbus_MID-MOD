@@ -98,3 +98,6 @@ class GrowattModbusNumber32(CoordinatorEntity[dict[str, Any]], NumberEntity):
         if ok:
             self._value = float(v); self.async_write_ha_state()
             await self._coordinator.async_request_refresh()
+
+    def _handle_coordinator_update(self) -> None:
+        self.async_write_ha_state()

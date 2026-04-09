@@ -324,14 +324,6 @@ sensors:
   scale: 1
   entity_category: diagnostic
 
-- name: Serial Number High
-  unique_id: serial_number_high
-  register_type: holding
-  address: 0
-  count: 5
-  scale: 1
-  entity_category: diagnostic
-
 controls:
 - type: switch
   name: "Grid Charge"
