@@ -106,7 +106,14 @@ class GrowattModbusSelect32(CoordinatorEntity[dict[str, Any]], SelectEntity):
         if raw is None:
             return None
         try:
-            return int(raw)
+            v = int(raw)
+            # Coordinator always reads as (reg[0]<<16)|reg[1] i.e. high_low.
+            # If word_order is low_high, swap words to get the true 32-bit value.
+            if self._order == "low_high":
+                hi = (v >> 16) & 0xFFFF
+                lo = v & 0xFFFF
+                v = (lo << 16) | hi
+            return v
         except Exception:
             return None
     def _recompute_option_from_u32(self, v: int) -> None:
