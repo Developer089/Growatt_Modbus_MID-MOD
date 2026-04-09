@@ -140,7 +140,7 @@ sensors:
   scale: 0.1
   unit_of_measurement: kWh
   device_class: energy
-  state_class: measurement
+  state_class: total_increasing
   signed: false
   
 - name: Battery Discharge Today
@@ -265,18 +265,18 @@ sensors:
   signed: false
   
 - name: Energy From AC Charge Today
-  unique_id: energy_from_from_ac_charge_today
+  unique_id: energy_from_ac_charge_today
   register_type: input
   address: 3133
   count: 2
   scale: 0.1
   unit_of_measurement: kWh
   device_class: energy
-  state_class: measurement
+  state_class: total_increasing
   signed: false
   
 - name: Energy From AC Charge Total
-  unique_id: energy_from_from_ac_charge_total
+  unique_id: energy_from_ac_charge_total
   register_type: input
   address: 3135
   count: 2
