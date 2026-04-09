@@ -1,8 +1,8 @@
 {
   "domain": "growatt_modbus",
   "name": "Growatt MOD/MID Modbus TCP",
-  "version": "0.2.6",
-  "documentation": "https://example.invalid/growatt_modbus",
+  "version": "1.0.0",
+  "documentation": "https://github.com/Developer089/Growatt_Modbus_MID-MOD",
   "requirements": [
     "pymodbus>=2.5.0"
   ],
@@ -13,6 +13,6 @@
     "custom_components.growatt_modbus"
   ],
   "codeowners": [
-    "@martin.nemecek"
+    "@Developer089"
   ]
 }
