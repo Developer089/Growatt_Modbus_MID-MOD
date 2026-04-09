@@ -16,10 +16,10 @@ from .const import (
 )
 
 DATA_SCHEMA = vol.Schema({
-    vol.Required(CONF_DEVICE_NAME, default=DEFAULT_DEVICE_NAME): str,
-    vol.Required(CONF_HOST): str,
-    vol.Optional(CONF_PORT, default=DEFAULT_PORT): int,
-    vol.Optional(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): int,
+    vol.Required(CONF_DEVICE_NAME, default=DEFAULT_DEVICE_NAME): vol.All(str, vol.Length(min=1, max=64)),
+    vol.Required(CONF_HOST): vol.All(str, vol.Length(min=1)),
+    vol.Optional(CONF_PORT, default=DEFAULT_PORT): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
+    vol.Optional(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): vol.All(vol.Coerce(int), vol.Range(min=0, max=247)),
     vol.Optional(CONF_SCAN_INTERVAL_MS, default=DEFAULT_SCAN_MS): vol.All(
         vol.Coerce(int), vol.Range(min=MIN_SCAN_MS, max=MAX_SCAN_MS)
     ),
@@ -89,10 +89,10 @@ class GrowattModbusOptionsFlow(config_entries.OptionsFlow):
             ),
             vol.Optional(CONF_TRANSPORT, default=transport): vol.In(["tcp", "rtutcp"]),
             vol.Optional(CONF_ADDR_OFFSET, default=self._entry_int_default(CONF_ADDR_OFFSET, DEFAULT_ADDR_OFFSET)): vol.Coerce(int),
-            vol.Optional(CONF_BAUDRATE, default=self._entry_int_default(CONF_BAUDRATE, DEFAULT_BAUDRATE)): vol.Coerce(int),
-            vol.Optional(CONF_BYTESIZE, default=self._entry_int_default(CONF_BYTESIZE, DEFAULT_BYTESIZE)): vol.Coerce(int),
+            vol.Optional(CONF_BAUDRATE, default=self._entry_int_default(CONF_BAUDRATE, DEFAULT_BAUDRATE)): vol.All(vol.Coerce(int), vol.In([1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200])),
+            vol.Optional(CONF_BYTESIZE, default=self._entry_int_default(CONF_BYTESIZE, DEFAULT_BYTESIZE)): vol.All(vol.Coerce(int), vol.In([5, 6, 7, 8])),
             vol.Optional(CONF_PARITY, default=parity): vol.In(["N", "E", "O"]),
-            vol.Optional(CONF_STOPBITS, default=self._entry_int_default(CONF_STOPBITS, DEFAULT_STOPBITS)): vol.Coerce(int),
+            vol.Optional(CONF_STOPBITS, default=self._entry_int_default(CONF_STOPBITS, DEFAULT_STOPBITS)): vol.All(vol.Coerce(int), vol.In([1, 2])),
         })
     async def async_step_init(self, user_input=None):
         errors = {}
