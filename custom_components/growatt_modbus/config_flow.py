@@ -31,8 +31,26 @@ class GrowattModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input: dict[str, Any] | None = None):
         errors = {}
         if user_input is not None:
-            device_name = user_input.get(CONF_DEVICE_NAME, DEFAULT_DEVICE_NAME)
-            return self.async_create_entry(title=f"{device_name} @ {user_input[CONF_HOST]}", data=user_input)
+            host = user_input[CONF_HOST]
+            port = user_input.get(CONF_PORT, DEFAULT_PORT)
+            unit_id = user_input.get(CONF_UNIT_ID, DEFAULT_UNIT_ID)
+            try:
+                from pymodbus.client import AsyncModbusTcpClient
+                client = AsyncModbusTcpClient(host, port=port, timeout=5)
+                await client.connect()
+                if not client.connected:
+                    errors["base"] = "cannot_connect"
+                else:
+                    rr = await client.read_input_registers(0, 1, unit_id)
+                    if rr is None or (hasattr(rr, "isError") and rr.isError()):
+                        errors["base"] = "no_response"
+                    await client.close()
+            except Exception:
+                errors["base"] = "cannot_connect"
+
+            if not errors:
+                device_name = user_input.get(CONF_DEVICE_NAME, DEFAULT_DEVICE_NAME)
+                return self.async_create_entry(title=f"{device_name} @ {host}", data=user_input)
         return self.async_show_form(step_id="user", data_schema=DATA_SCHEMA, errors=errors)
 
     @staticmethod

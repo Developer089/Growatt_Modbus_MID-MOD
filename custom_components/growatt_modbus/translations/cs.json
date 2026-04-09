@@ -14,6 +14,11 @@
           "mapping_path": "Cesta k YAML mape (volitelne)"
         }
       }
+    },
+    "error": {
+      "cannot_connect": "Nelze se pripojit k menimu. Zkontrolujte host a port.",
+      "no_response": "Pripojeno, ale zadna odpoved z unit ID. Zkontrolujte unit ID.",
+      "invalid_input": "Neplatne vstupni hodnoty."
     }
   },
   "options": {

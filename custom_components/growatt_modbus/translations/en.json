@@ -14,6 +14,11 @@
           "mapping_path": "YAML map path (optional)"
         }
       }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the inverter. Check host and port.",
+      "no_response": "Connected but no response from unit ID. Check unit ID.",
+      "invalid_input": "Invalid input values."
     }
   },
   "options": {
