@@ -208,18 +208,7 @@ sensors:
   device_class: energy
   state_class: total_increasing
   signed: false
-  
-- name: Today User Consumption
-  unique_id: today_user_consumption
-  register_type: input
-  address: 3067
-  count: 2
-  scale: 0.1
-  unit_of_measurement: kWh
-  device_class: energy
-  state_class: measurement
-  signed: false
-  
+
 - name: Energy Of User Load Total
   unique_id: energy_of_user_load_total
   register_type: input
