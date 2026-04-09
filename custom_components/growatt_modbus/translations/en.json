@@ -7,10 +7,10 @@
         "description": "Enter connection details for Modbus TCP. You can store a custom register map at /config/growatt_modbus_map.yaml.",
         "data": {
           "device_name": "Device name",
-          "host": "Host",
+          "host": "Host (IP address)",
           "port": "Port",
           "scan_interval_ms": "Scan interval (ms)",
-          "unit_id": "Unit ID",
+          "unit_id": "Unit ID (Modbus slave address)",
           "mapping_path": "YAML map path (optional)"
         }
       }

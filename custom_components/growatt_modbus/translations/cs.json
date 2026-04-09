@@ -4,13 +4,13 @@
     "step": {
       "user": {
         "title": "Pripojit Growatt MOD/MID Modbus TCP",
-        "description": "Zadejte udaje pro pripojeni pres Modbus TCP. Mapu registru muzete ulozit do souboru /config/growatt_modbus_map.yaml.",
+        "description": "Zadejte udaje pro pripojeni pres Modbus TCP. Vlastni mapu registru muzete ulozit do /config/growatt_modbus_map.yaml.",
         "data": {
           "device_name": "Nazev zarizeni",
-          "host": "Host",
+          "host": "Host (IP adresa)",
           "port": "Port",
           "scan_interval_ms": "Interval cteni (ms)",
-          "unit_id": "Unit ID",
+          "unit_id": "Unit ID (Modbus slave adresa)",
           "mapping_path": "Cesta k YAML mape (volitelne)"
         }
       }
