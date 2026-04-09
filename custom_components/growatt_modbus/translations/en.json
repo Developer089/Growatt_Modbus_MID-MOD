@@ -6,6 +6,7 @@
         "title": "Connect Growatt MOD/MID Modbus TCP",
         "description": "Enter connection details for Modbus TCP. You can store a custom register map at /config/growatt_modbus_map.yaml.",
         "data": {
+          "device_name": "Device name",
           "host": "Host",
           "port": "Port",
           "scan_interval_ms": "Scan interval (ms)",

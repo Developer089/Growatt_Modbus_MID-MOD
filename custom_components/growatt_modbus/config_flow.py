@@ -12,9 +12,11 @@ from .const import (
     CONF_PARITY, DEFAULT_PARITY, CONF_STOPBITS, DEFAULT_STOPBITS,
     CONF_ADDR_OFFSET, DEFAULT_ADDR_OFFSET, MIN_SCAN_SECONDS, MAX_SCAN_SECONDS,
     CONF_SCAN_INTERVAL_MS, DEFAULT_SCAN_MS, MIN_SCAN_MS, MAX_SCAN_MS,
+    CONF_DEVICE_NAME, DEFAULT_DEVICE_NAME,
 )
 
 DATA_SCHEMA = vol.Schema({
+    vol.Required(CONF_DEVICE_NAME, default=DEFAULT_DEVICE_NAME): str,
     vol.Required(CONF_HOST): str,
     vol.Optional(CONF_PORT, default=DEFAULT_PORT): int,
     vol.Optional(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): int,
@@ -29,7 +31,8 @@ class GrowattModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input: dict[str, Any] | None = None):
         errors = {}
         if user_input is not None:
-            return self.async_create_entry(title=f"Growatt MOD/MID Modbus TCP @ {user_input[CONF_HOST]}", data=user_input)
+            device_name = user_input.get(CONF_DEVICE_NAME, DEFAULT_DEVICE_NAME)
+            return self.async_create_entry(title=f"{device_name} @ {user_input[CONF_HOST]}", data=user_input)
         return self.async_show_form(step_id="user", data_schema=DATA_SCHEMA, errors=errors)
 
     @staticmethod

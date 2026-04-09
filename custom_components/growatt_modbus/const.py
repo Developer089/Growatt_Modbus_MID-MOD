@@ -15,6 +15,8 @@ CONF_BYTESIZE: Final = "bytesize"
 CONF_PARITY: Final = "parity"
 CONF_STOPBITS: Final = "stopbits"
 CONF_ADDR_OFFSET: Final = "address_offset"
+CONF_DEVICE_NAME: Final = "device_name"
+DEFAULT_DEVICE_NAME: Final = "Growatt"
 
 DEFAULT_PORT: Final = 502
 DEFAULT_UNIT_ID: Final = 1
