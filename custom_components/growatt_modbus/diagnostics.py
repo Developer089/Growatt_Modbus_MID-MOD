@@ -20,7 +20,6 @@ async def async_get_config_entry_diagnostics(
         "options": options,
         "coordinator": {
             "available": coordinator.available,
-            "hold_once_done": coordinator._hold_once_done,
             "register_count": len(coordinator._registers),
             "holding_cache_size": len(coordinator._hold_cache),
         },

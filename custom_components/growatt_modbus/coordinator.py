@@ -46,7 +46,6 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._max_reconnect_attempts = 5
 
         self._available = False
-        self._hold_once_done = False
         self._hold_cache: Dict[str, Any] = {}
         self._hold_regs_by_addr: DefaultDict[int, List[RegisterDef]] = defaultdict(list)
         for r in self._registers:
@@ -86,22 +85,13 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 inputs = [r for r in self._registers if r.register_type == "input"]
                 holdings = [r for r in self._registers if r.register_type == "holding"]
 
-                # First cycle: read HOLDINGS FIRST, then inputs
-                if not self._hold_once_done and holdings:
-                    _LOGGER.info("First cycle: reading HOLDING registers first")
+                # Read ALL registers every cycle (holdings + inputs)
+                if holdings:
                     await self._read_grouped(holdings, result, self._read_holding)
                     for r in holdings:
                         self._hold_cache[r.unique_id] = result.get(r.unique_id)
-                    self._hold_once_done = True
-
-                    if inputs:
-                        await self._read_grouped(inputs, result, self._read_input)
-                else:
-                    # Later cycles: inputs only; holdings from cache
-                    if inputs:
-                        await self._read_grouped(inputs, result, self._read_input)
-                    for r in holdings:
-                        result[r.unique_id] = self._hold_cache.get(r.unique_id)
+                if inputs:
+                    await self._read_grouped(inputs, result, self._read_input)
 
                 self._available = True
                 return result
