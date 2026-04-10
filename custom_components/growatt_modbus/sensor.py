@@ -31,6 +31,9 @@ class GrowattRegisterSensor(CoordinatorEntity[dict[str, Any]], SensorEntity):
         uid = reg.unique_id or f"s_{reg.address}"
         self._attr_unique_id = f"{entry.entry_id}_{uid}"
         self._attr_name = reg.name
+        # Hide auto-generated readback sensors from UI by default
+        if uid.startswith("rb_"):
+            self._attr_entity_registry_enabled_default = False
         self._attr_device_info = build_device_info(entry)
         self._attr_native_unit_of_measurement = reg.unit_of_measurement
         if reg.device_class:
