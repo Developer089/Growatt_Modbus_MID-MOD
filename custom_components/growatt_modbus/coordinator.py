@@ -1,6 +1,6 @@
 
 from __future__ import annotations
-import asyncio, logging
+import asyncio, logging, time
 from dataclasses import dataclass
 from datetime import timedelta
 from typing import Any, Dict, List, DefaultDict, Optional
@@ -46,6 +46,8 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._max_reconnect_attempts = 5
 
         self._available = False
+        self._optimistic: Dict[str, tuple[Any, float]] = {}  # uid -> (value, timestamp)
+        self._optimistic_ttl = 5.0  # seconds
         self._hold_cache: Dict[str, Any] = {}
         self._hold_regs_by_addr: DefaultDict[int, List[RegisterDef]] = defaultdict(list)
         for r in self._registers:
@@ -92,6 +94,17 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                         self._hold_cache[r.unique_id] = result.get(r.unique_id)
                 if inputs:
                     await self._read_grouped(inputs, result, self._read_input)
+
+                # Optimistic hold: override with written values for TTL period
+                now = time.monotonic()
+                expired = []
+                for uid, (val, ts) in self._optimistic.items():
+                    if now - ts < self._optimistic_ttl:
+                        result[uid] = val
+                    else:
+                        expired.append(uid)
+                for uid in expired:
+                    del self._optimistic[uid]
 
                 self._available = True
                 return result
@@ -158,10 +171,13 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 try:
                     rr = await variant()
                     if getattr(rr,"isError",lambda: False)(): continue
-                    # update cache for 16-bit sensors at this address
+                    # update cache + optimistic hold for 16-bit sensors
+                    now = time.monotonic()
                     for r in self._hold_regs_by_addr.get(int(address), []):
                         if r.count == 1:
-                            self._hold_cache[r.unique_id] = (value * r.scale)
+                            v = value * r.scale
+                            self._hold_cache[r.unique_id] = v
+                            self._optimistic[r.unique_id] = (v, now)
                     await self.async_request_refresh()
                     return True
                 except TypeError: continue
@@ -179,20 +195,25 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     rr = await variant()
                     if getattr(rr,"isError",lambda: False)(): continue
 
-                    # 16b cache updates
+                    # 16b cache + optimistic updates
+                    now = time.monotonic()
                     for i, val in enumerate(values):
                         addr_i = address + i
                         for r in self._hold_regs_by_addr.get(addr_i, []):
                             if r.count == 1:
-                                self._hold_cache[r.unique_id] = (val * r.scale)
+                                v = val * r.scale
+                                self._hold_cache[r.unique_id] = v
+                                self._optimistic[r.unique_id] = (v, now)
 
-                    # 32b cache update at base address if two or more values provided
+                    # 32b cache + optimistic update
                     if len(values) >= 2:
                         hi, lo = values[0] & 0xFFFF, values[1] & 0xFFFF
                         u32 = ((hi << 16) | lo)
                         for r in self._hold_regs_by_addr.get(int(address), []):
                             if r.count == 2:
-                                self._hold_cache[r.unique_id] = (u32 * r.scale)
+                                v = u32 * r.scale
+                                self._hold_cache[r.unique_id] = v
+                                self._optimistic[r.unique_id] = (v, now)
 
                     await self.async_request_refresh()
                     return True
