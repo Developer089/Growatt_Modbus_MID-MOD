@@ -27,6 +27,7 @@ class RegisterDef:
     state_class: str | None = None
     signed: bool = False
     options: dict[int, str] | None = None  # enum mapping for sensor (0->"text")
+    mask: int | None = None  # bitmask applied to raw value before sign/scale (e.g. 0xFF for low byte)
 
 class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """
@@ -109,11 +110,13 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 off = r.address-start; chunk = raw[off:off+r.count]
                 if len(chunk) >= r.count:
                     if r.count==1:
-                        v=chunk[0]; 
+                        v=chunk[0];
+                        if r.mask is not None: v &= r.mask
                         if r.signed and v>=0x8000: v-=0x10000
                         val = v * r.scale
                     elif r.count==2:
                         high,low=chunk[0],chunk[1]; v=(high<<16)|low
+                        if r.mask is not None: v &= r.mask
                         if r.signed and v>=0x80000000: v-=0x100000000
                         val = v * r.scale
             out[r.unique_id]=val
@@ -140,14 +143,15 @@ class GrowattModbusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def write_single_register(self, address: int, value: int) -> bool:
         a=self._addr(address); client=await self._ensure_client()
-        for variant in (lambda: client.write_register(a,value,self._unit_id), lambda: client.write_register(address=a,value=value,unit=self._unit_id), lambda: client.write_register(a,value), lambda: client.write_register(address=a,value=value)):
+        wire = int(value) & 0xFFFF
+        for variant in (lambda: client.write_register(a,wire,self._unit_id), lambda: client.write_register(address=a,value=wire,unit=self._unit_id), lambda: client.write_register(a,wire), lambda: client.write_register(address=a,value=wire)):
             try:
                 rr = await variant()
                 if getattr(rr,"isError",lambda: False)(): continue
-                # update cache for 16-bit sensors at this address
+                # update cache for 16-bit sensors at this address (cache holds signed-aware value × scale)
                 for r in self._hold_regs_by_addr.get(int(address), []):
                     if r.count == 1:
-                        self._hold_cache[r.unique_id] = (value * r.scale)
+                        self._hold_cache[r.unique_id] = (int(value) * r.scale)
                 await self.async_request_refresh()
                 return True
             except TypeError: continue

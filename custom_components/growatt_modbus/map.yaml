@@ -26,7 +26,7 @@ sensors:
   register_type: input
   address: 5
   count: 2
-  scale: 1.0
+  scale: 0.1
   unit_of_measurement: W
   device_class: power
   state_class: measurement
@@ -57,9 +57,9 @@ sensors:
 - name: PV2 Power
   unique_id: pv2_power
   register_type: input
-  address: 13
+  address: 9
   count: 2
-  scale: 1.0
+  scale: 0.1
   unit_of_measurement: W
   device_class: power
   state_class: measurement
@@ -209,17 +209,6 @@ sensors:
   state_class: total_increasing
   signed: false
   
-- name: Today User Consumption
-  unique_id: today_user_consumption
-  register_type: input
-  address: 3067
-  count: 2
-  scale: 0.1
-  unit_of_measurement: kWh
-  device_class: energy
-  state_class: measurement
-  signed: false
-  
 - name: Energy Of User Load Total
   unique_id: energy_of_user_load_total
   register_type: input
@@ -319,6 +308,860 @@ sensors:
   state_class: measurement
   signed: false
 
+# --- Battery pack / BMS data (WIT protocol, input registers 3212-3232) ---
+- name: BMS Status
+  unique_id: bms_status
+  register_type: input
+  address: 3212
+  count: 1
+  scale: 1.0
+  options:
+    0: dormancy
+    1: charge
+    2: discharge
+    3: free
+    4: standby
+    5: soft start
+    6: fault
+    7: update
+
+- name: BMS SOC
+  unique_id: bms_soc
+  register_type: input
+  address: 3215
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+
+- name: BMS Battery Voltage
+  unique_id: bms_battery_voltage
+  register_type: input
+  address: 3216
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: BMS Battery Current
+  unique_id: bms_battery_current
+  register_type: input
+  address: 3217
+  count: 1
+  scale: 0.01
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: BMS Battery Temperature
+  unique_id: bms_battery_temperature
+  register_type: input
+  address: 3218
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: BMS Max Charge Current
+  unique_id: bms_max_charge_current
+  register_type: input
+  address: 3219
+  count: 1
+  scale: 0.01
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: false
+
+- name: BMS Max Discharge Current
+  unique_id: bms_max_discharge_current
+  register_type: input
+  address: 3220
+  count: 1
+  scale: 0.01
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: false
+
+- name: BMS Cycle Count
+  unique_id: bms_cycle_count
+  register_type: input
+  address: 3221
+  count: 1
+  scale: 1.0
+  state_class: total_increasing
+  signed: false
+
+- name: BMS State Of Health
+  unique_id: bms_soh
+  register_type: input
+  address: 3222
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+
+- name: BMS Charge Voltage Limit
+  unique_id: bms_charge_voltage_limit
+  register_type: input
+  address: 3223
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: BMS Discharge Voltage Limit
+  unique_id: bms_discharge_voltage_limit
+  register_type: input
+  address: 3225
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: BMS Cell Voltage Max
+  unique_id: bms_cell_voltage_max
+  register_type: input
+  address: 3230
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: BMS Cell Voltage Min
+  unique_id: bms_cell_voltage_min
+  register_type: input
+  address: 3231
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery Load Voltage
+  unique_id: battery_load_voltage
+  register_type: input
+  address: 3232
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+# --- Per-pack battery module data (WIT APX block, input regs 5080+(k-1)*40; 6 modules) ---
+# Battery 1 (APX module base 5080)
+- name: Battery 1 State
+  unique_id: bat1_state
+  register_type: input
+  address: 5080
+  count: 1
+  scale: 1.0
+  options:
+    0: initialize
+    1: standby
+    2: charge
+    3: discharge
+    4: shutdown
+    5: fault
+    6: update
+
+- name: Battery 1 SOC
+  unique_id: bat1_soc
+  register_type: input
+  address: 5081
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+  mask: 255
+
+- name: Battery 1 SOH
+  unique_id: bat1_soh
+  register_type: input
+  address: 5082
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+  mask: 127
+
+- name: Battery 1 Voltage
+  unique_id: bat1_voltage
+  register_type: input
+  address: 5083
+  count: 1
+  scale: 0.1
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 1 Current
+  unique_id: bat1_current
+  register_type: input
+  address: 5084
+  count: 1
+  scale: 0.1
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 1 Power
+  unique_id: bat1_power
+  register_type: input
+  address: 5085
+  count: 1
+  scale: 1.0
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: true
+
+- name: Battery 1 Cell Voltage Max
+  unique_id: bat1_cell_voltage_max
+  register_type: input
+  address: 5088
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 1 Cell Voltage Min
+  unique_id: bat1_cell_voltage_min
+  register_type: input
+  address: 5089
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 1 Max Temperature
+  unique_id: bat1_temperature_max
+  register_type: input
+  address: 5090
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 1 Min Temperature
+  unique_id: bat1_temperature_min
+  register_type: input
+  address: 5091
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+# Battery 2 (APX module base 5120)
+- name: Battery 2 State
+  unique_id: bat2_state
+  register_type: input
+  address: 5120
+  count: 1
+  scale: 1.0
+  options:
+    0: initialize
+    1: standby
+    2: charge
+    3: discharge
+    4: shutdown
+    5: fault
+    6: update
+
+- name: Battery 2 SOC
+  unique_id: bat2_soc
+  register_type: input
+  address: 5121
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+  mask: 255
+
+- name: Battery 2 SOH
+  unique_id: bat2_soh
+  register_type: input
+  address: 5122
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+  mask: 127
+
+- name: Battery 2 Voltage
+  unique_id: bat2_voltage
+  register_type: input
+  address: 5123
+  count: 1
+  scale: 0.1
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 2 Current
+  unique_id: bat2_current
+  register_type: input
+  address: 5124
+  count: 1
+  scale: 0.1
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 2 Power
+  unique_id: bat2_power
+  register_type: input
+  address: 5125
+  count: 1
+  scale: 1.0
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: true
+
+- name: Battery 2 Cell Voltage Max
+  unique_id: bat2_cell_voltage_max
+  register_type: input
+  address: 5128
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 2 Cell Voltage Min
+  unique_id: bat2_cell_voltage_min
+  register_type: input
+  address: 5129
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 2 Max Temperature
+  unique_id: bat2_temperature_max
+  register_type: input
+  address: 5130
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 2 Min Temperature
+  unique_id: bat2_temperature_min
+  register_type: input
+  address: 5131
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+# Battery 3 (APX module base 5160)
+- name: Battery 3 State
+  unique_id: bat3_state
+  register_type: input
+  address: 5160
+  count: 1
+  scale: 1.0
+  options:
+    0: initialize
+    1: standby
+    2: charge
+    3: discharge
+    4: shutdown
+    5: fault
+    6: update
+
+- name: Battery 3 SOC
+  unique_id: bat3_soc
+  register_type: input
+  address: 5161
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+  mask: 255
+
+- name: Battery 3 SOH
+  unique_id: bat3_soh
+  register_type: input
+  address: 5162
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+  mask: 127
+
+- name: Battery 3 Voltage
+  unique_id: bat3_voltage
+  register_type: input
+  address: 5163
+  count: 1
+  scale: 0.1
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 3 Current
+  unique_id: bat3_current
+  register_type: input
+  address: 5164
+  count: 1
+  scale: 0.1
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 3 Power
+  unique_id: bat3_power
+  register_type: input
+  address: 5165
+  count: 1
+  scale: 1.0
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: true
+
+- name: Battery 3 Cell Voltage Max
+  unique_id: bat3_cell_voltage_max
+  register_type: input
+  address: 5168
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 3 Cell Voltage Min
+  unique_id: bat3_cell_voltage_min
+  register_type: input
+  address: 5169
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 3 Max Temperature
+  unique_id: bat3_temperature_max
+  register_type: input
+  address: 5170
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 3 Min Temperature
+  unique_id: bat3_temperature_min
+  register_type: input
+  address: 5171
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+# Battery 4 (APX module base 5200)
+- name: Battery 4 State
+  unique_id: bat4_state
+  register_type: input
+  address: 5200
+  count: 1
+  scale: 1.0
+  options:
+    0: initialize
+    1: standby
+    2: charge
+    3: discharge
+    4: shutdown
+    5: fault
+    6: update
+
+- name: Battery 4 SOC
+  unique_id: bat4_soc
+  register_type: input
+  address: 5201
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+  mask: 255
+
+- name: Battery 4 SOH
+  unique_id: bat4_soh
+  register_type: input
+  address: 5202
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+  mask: 127
+
+- name: Battery 4 Voltage
+  unique_id: bat4_voltage
+  register_type: input
+  address: 5203
+  count: 1
+  scale: 0.1
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 4 Current
+  unique_id: bat4_current
+  register_type: input
+  address: 5204
+  count: 1
+  scale: 0.1
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 4 Power
+  unique_id: bat4_power
+  register_type: input
+  address: 5205
+  count: 1
+  scale: 1.0
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: true
+
+- name: Battery 4 Cell Voltage Max
+  unique_id: bat4_cell_voltage_max
+  register_type: input
+  address: 5208
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 4 Cell Voltage Min
+  unique_id: bat4_cell_voltage_min
+  register_type: input
+  address: 5209
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 4 Max Temperature
+  unique_id: bat4_temperature_max
+  register_type: input
+  address: 5210
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 4 Min Temperature
+  unique_id: bat4_temperature_min
+  register_type: input
+  address: 5211
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+# Battery 5 (APX module base 5240)
+- name: Battery 5 State
+  unique_id: bat5_state
+  register_type: input
+  address: 5240
+  count: 1
+  scale: 1.0
+  options:
+    0: initialize
+    1: standby
+    2: charge
+    3: discharge
+    4: shutdown
+    5: fault
+    6: update
+
+- name: Battery 5 SOC
+  unique_id: bat5_soc
+  register_type: input
+  address: 5241
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+  mask: 255
+
+- name: Battery 5 SOH
+  unique_id: bat5_soh
+  register_type: input
+  address: 5242
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+  mask: 127
+
+- name: Battery 5 Voltage
+  unique_id: bat5_voltage
+  register_type: input
+  address: 5243
+  count: 1
+  scale: 0.1
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 5 Current
+  unique_id: bat5_current
+  register_type: input
+  address: 5244
+  count: 1
+  scale: 0.1
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 5 Power
+  unique_id: bat5_power
+  register_type: input
+  address: 5245
+  count: 1
+  scale: 1.0
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: true
+
+- name: Battery 5 Cell Voltage Max
+  unique_id: bat5_cell_voltage_max
+  register_type: input
+  address: 5248
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 5 Cell Voltage Min
+  unique_id: bat5_cell_voltage_min
+  register_type: input
+  address: 5249
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 5 Max Temperature
+  unique_id: bat5_temperature_max
+  register_type: input
+  address: 5250
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 5 Min Temperature
+  unique_id: bat5_temperature_min
+  register_type: input
+  address: 5251
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+# Battery 6 (APX module base 5280)
+- name: Battery 6 State
+  unique_id: bat6_state
+  register_type: input
+  address: 5280
+  count: 1
+  scale: 1.0
+  options:
+    0: initialize
+    1: standby
+    2: charge
+    3: discharge
+    4: shutdown
+    5: fault
+    6: update
+
+- name: Battery 6 SOC
+  unique_id: bat6_soc
+  register_type: input
+  address: 5281
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+  mask: 255
+
+- name: Battery 6 SOH
+  unique_id: bat6_soh
+  register_type: input
+  address: 5282
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+  mask: 127
+
+- name: Battery 6 Voltage
+  unique_id: bat6_voltage
+  register_type: input
+  address: 5283
+  count: 1
+  scale: 0.1
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 6 Current
+  unique_id: bat6_current
+  register_type: input
+  address: 5284
+  count: 1
+  scale: 0.1
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 6 Power
+  unique_id: bat6_power
+  register_type: input
+  address: 5285
+  count: 1
+  scale: 1.0
+  unit_of_measurement: W
+  device_class: power
+  state_class: measurement
+  signed: true
+
+- name: Battery 6 Cell Voltage Max
+  unique_id: bat6_cell_voltage_max
+  register_type: input
+  address: 5288
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 6 Cell Voltage Min
+  unique_id: bat6_cell_voltage_min
+  register_type: input
+  address: 5289
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 6 Max Temperature
+  unique_id: bat6_temperature_max
+  register_type: input
+  address: 5290
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 6 Min Temperature
+  unique_id: bat6_temperature_min
+  register_type: input
+  address: 5291
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
 - name: Work Mode
   unique_id: work_mode_sensor
   register_type: input    # nebo holding – podle reálné adresy v manuálu
@@ -342,15 +1185,17 @@ controls:
   name: "Export Power Rate"
   unique_id: export_power_rate
   register_type: holding
-  address: 123        
-  min: 0
-  max: 1000
-  step: 1
-  unit_of_measurement: "W"
+  address: 123
+  min: -100
+  max: 100
+  step: 0.1
+  unit_of_measurement: "%"
   mode: slider
   optimistic: true
-  write_factor: 1
-  
+  write_factor: 10
+  signed: true
+  entity_category: config
+
 - type: number
   name: "Battery Charge Power"
   unique_id: battery_charge_power
