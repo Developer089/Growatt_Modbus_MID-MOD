@@ -492,6 +492,7 @@ sensors:
   device_class: battery
   state_class: measurement
   signed: false
+  mask: 255
 
 - name: Battery 1 SOH
   unique_id: bat1_soh
@@ -502,6 +503,7 @@ sensors:
   unit_of_measurement: '%'
   state_class: measurement
   signed: false
+  mask: 127
 
 - name: Battery 1 Voltage
   unique_id: bat1_voltage
@@ -606,6 +608,7 @@ sensors:
   device_class: battery
   state_class: measurement
   signed: false
+  mask: 255
 
 - name: Battery 2 SOH
   unique_id: bat2_soh
@@ -616,6 +619,7 @@ sensors:
   unit_of_measurement: '%'
   state_class: measurement
   signed: false
+  mask: 127
 
 - name: Battery 2 Voltage
   unique_id: bat2_voltage
@@ -720,6 +724,7 @@ sensors:
   device_class: battery
   state_class: measurement
   signed: false
+  mask: 255
 
 - name: Battery 3 SOH
   unique_id: bat3_soh
@@ -730,6 +735,7 @@ sensors:
   unit_of_measurement: '%'
   state_class: measurement
   signed: false
+  mask: 127
 
 - name: Battery 3 Voltage
   unique_id: bat3_voltage
@@ -834,6 +840,7 @@ sensors:
   device_class: battery
   state_class: measurement
   signed: false
+  mask: 255
 
 - name: Battery 4 SOH
   unique_id: bat4_soh
@@ -844,6 +851,7 @@ sensors:
   unit_of_measurement: '%'
   state_class: measurement
   signed: false
+  mask: 127
 
 - name: Battery 4 Voltage
   unique_id: bat4_voltage
@@ -948,6 +956,7 @@ sensors:
   device_class: battery
   state_class: measurement
   signed: false
+  mask: 255
 
 - name: Battery 5 SOH
   unique_id: bat5_soh
@@ -958,6 +967,7 @@ sensors:
   unit_of_measurement: '%'
   state_class: measurement
   signed: false
+  mask: 127
 
 - name: Battery 5 Voltage
   unique_id: bat5_voltage
@@ -1062,6 +1072,7 @@ sensors:
   device_class: battery
   state_class: measurement
   signed: false
+  mask: 255
 
 - name: Battery 6 SOH
   unique_id: bat6_soh
@@ -1072,6 +1083,7 @@ sensors:
   unit_of_measurement: '%'
   state_class: measurement
   signed: false
+  mask: 127
 
 - name: Battery 6 Voltage
   unique_id: bat6_voltage
