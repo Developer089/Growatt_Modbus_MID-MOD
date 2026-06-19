@@ -26,7 +26,7 @@ sensors:
   register_type: input
   address: 5
   count: 2
-  scale: 1.0
+  scale: 0.1
   unit_of_measurement: W
   device_class: power
   state_class: measurement
@@ -57,9 +57,9 @@ sensors:
 - name: PV2 Power
   unique_id: pv2_power
   register_type: input
-  address: 13
+  address: 9
   count: 2
-  scale: 1.0
+  scale: 0.1
   unit_of_measurement: W
   device_class: power
   state_class: measurement
@@ -621,6 +621,566 @@ sensors:
   unit_of_measurement: Ah
   state_class: measurement
   signed: false
+
+# --- Per-pack battery data (WIT BDC block 4000+, 6 parallel packs; mirror of 3165-3233) ---
+# Battery 1 (BDC base 4000)
+- name: Battery 1 State
+  unique_id: bat1_state
+  register_type: input
+  address: 4055
+  count: 1
+  scale: 1.0
+  options:
+    0: dormancy
+    1: charge
+    2: discharge
+    3: free
+    4: standby
+    5: soft start
+    6: fault
+    7: update
+
+- name: Battery 1 SOC
+  unique_id: bat1_soc
+  register_type: input
+  address: 4058
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+
+- name: Battery 1 Voltage
+  unique_id: bat1_voltage
+  register_type: input
+  address: 4059
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 1 Current
+  unique_id: bat1_current
+  register_type: input
+  address: 4060
+  count: 1
+  scale: 0.01
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 1 Temperature
+  unique_id: bat1_temperature
+  register_type: input
+  address: 4061
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 1 SOH
+  unique_id: bat1_soh
+  register_type: input
+  address: 4065
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+
+- name: Battery 1 Cell Voltage Max
+  unique_id: bat1_cell_voltage_max
+  register_type: input
+  address: 4073
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 1 Cell Voltage Min
+  unique_id: bat1_cell_voltage_min
+  register_type: input
+  address: 4074
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+# Battery 2 (BDC base 4108)
+- name: Battery 2 State
+  unique_id: bat2_state
+  register_type: input
+  address: 4163
+  count: 1
+  scale: 1.0
+  options:
+    0: dormancy
+    1: charge
+    2: discharge
+    3: free
+    4: standby
+    5: soft start
+    6: fault
+    7: update
+
+- name: Battery 2 SOC
+  unique_id: bat2_soc
+  register_type: input
+  address: 4166
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+
+- name: Battery 2 Voltage
+  unique_id: bat2_voltage
+  register_type: input
+  address: 4167
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 2 Current
+  unique_id: bat2_current
+  register_type: input
+  address: 4168
+  count: 1
+  scale: 0.01
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 2 Temperature
+  unique_id: bat2_temperature
+  register_type: input
+  address: 4169
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 2 SOH
+  unique_id: bat2_soh
+  register_type: input
+  address: 4173
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+
+- name: Battery 2 Cell Voltage Max
+  unique_id: bat2_cell_voltage_max
+  register_type: input
+  address: 4181
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 2 Cell Voltage Min
+  unique_id: bat2_cell_voltage_min
+  register_type: input
+  address: 4182
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+# Battery 3 (BDC base 4216)
+- name: Battery 3 State
+  unique_id: bat3_state
+  register_type: input
+  address: 4271
+  count: 1
+  scale: 1.0
+  options:
+    0: dormancy
+    1: charge
+    2: discharge
+    3: free
+    4: standby
+    5: soft start
+    6: fault
+    7: update
+
+- name: Battery 3 SOC
+  unique_id: bat3_soc
+  register_type: input
+  address: 4274
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+
+- name: Battery 3 Voltage
+  unique_id: bat3_voltage
+  register_type: input
+  address: 4275
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 3 Current
+  unique_id: bat3_current
+  register_type: input
+  address: 4276
+  count: 1
+  scale: 0.01
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 3 Temperature
+  unique_id: bat3_temperature
+  register_type: input
+  address: 4277
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 3 SOH
+  unique_id: bat3_soh
+  register_type: input
+  address: 4281
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+
+- name: Battery 3 Cell Voltage Max
+  unique_id: bat3_cell_voltage_max
+  register_type: input
+  address: 4289
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 3 Cell Voltage Min
+  unique_id: bat3_cell_voltage_min
+  register_type: input
+  address: 4290
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+# Battery 4 (BDC base 4324)
+- name: Battery 4 State
+  unique_id: bat4_state
+  register_type: input
+  address: 4379
+  count: 1
+  scale: 1.0
+  options:
+    0: dormancy
+    1: charge
+    2: discharge
+    3: free
+    4: standby
+    5: soft start
+    6: fault
+    7: update
+
+- name: Battery 4 SOC
+  unique_id: bat4_soc
+  register_type: input
+  address: 4382
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+
+- name: Battery 4 Voltage
+  unique_id: bat4_voltage
+  register_type: input
+  address: 4383
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 4 Current
+  unique_id: bat4_current
+  register_type: input
+  address: 4384
+  count: 1
+  scale: 0.01
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 4 Temperature
+  unique_id: bat4_temperature
+  register_type: input
+  address: 4385
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 4 SOH
+  unique_id: bat4_soh
+  register_type: input
+  address: 4389
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+
+- name: Battery 4 Cell Voltage Max
+  unique_id: bat4_cell_voltage_max
+  register_type: input
+  address: 4397
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 4 Cell Voltage Min
+  unique_id: bat4_cell_voltage_min
+  register_type: input
+  address: 4398
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+# Battery 5 (BDC base 4432)
+- name: Battery 5 State
+  unique_id: bat5_state
+  register_type: input
+  address: 4487
+  count: 1
+  scale: 1.0
+  options:
+    0: dormancy
+    1: charge
+    2: discharge
+    3: free
+    4: standby
+    5: soft start
+    6: fault
+    7: update
+
+- name: Battery 5 SOC
+  unique_id: bat5_soc
+  register_type: input
+  address: 4490
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+
+- name: Battery 5 Voltage
+  unique_id: bat5_voltage
+  register_type: input
+  address: 4491
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 5 Current
+  unique_id: bat5_current
+  register_type: input
+  address: 4492
+  count: 1
+  scale: 0.01
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 5 Temperature
+  unique_id: bat5_temperature
+  register_type: input
+  address: 4493
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 5 SOH
+  unique_id: bat5_soh
+  register_type: input
+  address: 4497
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+
+- name: Battery 5 Cell Voltage Max
+  unique_id: bat5_cell_voltage_max
+  register_type: input
+  address: 4505
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 5 Cell Voltage Min
+  unique_id: bat5_cell_voltage_min
+  register_type: input
+  address: 4506
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+# Battery 6 (BDC base 4540)
+- name: Battery 6 State
+  unique_id: bat6_state
+  register_type: input
+  address: 4595
+  count: 1
+  scale: 1.0
+  options:
+    0: dormancy
+    1: charge
+    2: discharge
+    3: free
+    4: standby
+    5: soft start
+    6: fault
+    7: update
+
+- name: Battery 6 SOC
+  unique_id: bat6_soc
+  register_type: input
+  address: 4598
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  device_class: battery
+  state_class: measurement
+  signed: false
+
+- name: Battery 6 Voltage
+  unique_id: bat6_voltage
+  register_type: input
+  address: 4599
+  count: 1
+  scale: 0.01
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 6 Current
+  unique_id: bat6_current
+  register_type: input
+  address: 4600
+  count: 1
+  scale: 0.01
+  unit_of_measurement: A
+  device_class: current
+  state_class: measurement
+  signed: true
+
+- name: Battery 6 Temperature
+  unique_id: bat6_temperature
+  register_type: input
+  address: 4601
+  count: 1
+  scale: 0.1
+  unit_of_measurement: "\xB0C"
+  device_class: temperature
+  state_class: measurement
+  signed: true
+
+- name: Battery 6 SOH
+  unique_id: bat6_soh
+  register_type: input
+  address: 4605
+  count: 1
+  scale: 1.0
+  unit_of_measurement: '%'
+  state_class: measurement
+  signed: false
+
+- name: Battery 6 Cell Voltage Max
+  unique_id: bat6_cell_voltage_max
+  register_type: input
+  address: 4613
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
+- name: Battery 6 Cell Voltage Min
+  unique_id: bat6_cell_voltage_min
+  register_type: input
+  address: 4614
+  count: 1
+  scale: 0.001
+  unit_of_measurement: V
+  device_class: voltage
+  state_class: measurement
+  signed: false
+
 
 - name: Work Mode
   unique_id: work_mode_sensor
